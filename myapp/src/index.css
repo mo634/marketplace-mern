@@ -1,3 +1,37 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+}
+*{
+    padding:0;
+    margin: 0;
+    font-size: large;
+}
+*{
+    @apply text-main-color
+}
+
+
+/* tailwind custom utilties */
+
+.headr_link{
+    @apply mr-3 hover:underline 
+}
+.Link_media{
+    @apply hidden md:inline
+}
+.search_field{
+    @apply  bg-transparent focus:outline-none focus:placeholder:opacity-0 focus:placeholder:duration-500 w-24 md:w-64
+}
+
+
+.text_media{
+    @apply text-sm md:text-xl
+}
+
+.my_container{
+    @apply w-[80%] m-auto
+}
