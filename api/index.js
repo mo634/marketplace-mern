@@ -1,10 +1,13 @@
-import express from "express";
+import express, { json } from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import userRouter from "./routes/user.route.js";
+import singupRouter from "./routes/singup.route.js";
 dotenv.config();
 
 const app = express();
+
+app.use(express.json())
 
 //connect dataBase
 mongoose
@@ -20,6 +23,10 @@ app.listen(3000, () => {
     console.log("runnign serever ");
 });
 
-// create user route
+// create  routes
 
+//user route
 app.use("/api/user", userRouter);
+
+//singnup route
+app.use("/api/auth", singupRouter);

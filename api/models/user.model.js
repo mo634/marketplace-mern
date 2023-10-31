@@ -7,7 +7,7 @@ const userSchema = new Schema({
     
     username: {
         type: String,
-        required,
+        required:[true,"username is required"],
         unique:[true,"username must be unique"]
     },
 
@@ -18,7 +18,7 @@ const userSchema = new Schema({
     },
     password: {
         type: String,
-        required:[true,"username is required"],
+        required:[true,"password is required"],
     },
 
 } , {timestamps:true})
