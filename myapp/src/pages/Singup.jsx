@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const Singup = () => {
-  return (
-    <div>Singup</div>
-  )
-}
+    return <div>hello </div>;
+};
 
-export default Singup
+export default Singup;

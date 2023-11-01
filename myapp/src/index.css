@@ -4,6 +4,7 @@
 
 body{
     font-family: Arial, Helvetica, sans-serif;
+    background-color: rgb(208 215 208)
 }
 *{
     padding:0;
@@ -34,4 +35,12 @@ body{
 
 .my_container{
     @apply w-[80%] m-auto
+}
+
+.input_field{
+    @apply border  p-3 rounded-md shadow-md focus:outline-[#0079ff] focus:placeholder:opacity-0 focus:placeholder:duration-500
+}
+
+.main_btn{
+    @apply bg-[#333] p-3 rounded-md shadow-md text-white uppercase hover:opacity-[0.7] duration-500
 }

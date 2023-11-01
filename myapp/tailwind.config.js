@@ -8,7 +8,8 @@ export default {
     extend: {
       colors: {
         "header-color": "#eee",
-        "main-color":"#0079ff"
+        "main-color":"#0079ff",
+        "parg-color":"#333",
       }
     },
   },
