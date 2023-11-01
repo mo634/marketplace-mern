@@ -1,6 +1,6 @@
 import {User} from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
-export const singupFunc = async (req, res) => {
+export const singupFunc = async (req, res,next) => {
     const {username, email, password} = req.body;
 
     // hashing pass
@@ -12,7 +12,7 @@ export const singupFunc = async (req, res) => {
         await newUser.save();
         res.status(201).json("user added successfuly");
 } catch (error) {
-    
-    res.status(500).json(error.message);
+        // if err go to next middleWare 
+        next(error)
     }
 };

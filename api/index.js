@@ -30,3 +30,24 @@ app.use("/api/user", userRouter);
 
 //singnup route
 app.use("/api/auth", singupRouter);
+
+
+// create middleware to handle errors
+app.use((err,req,res,next) => {
+    //store status code err 
+    const statusCode = err.statusCode || 500 
+    
+    //store status code err 
+    const message = err.message || "Internal Server Error" 
+    
+    // return res
+
+    return res.status(statusCode).json({
+
+        success: false, 
+
+        statusCode,
+
+        message
+    })
+})
