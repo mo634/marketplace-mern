@@ -2,7 +2,7 @@ import express, { json } from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import userRouter from "./routes/user.route.js";
-import singupRouter from "./routes/singup.route.js";
+import authRouter from "./routes/auth.route.js";
 dotenv.config();
 
 const app = express();
@@ -29,7 +29,7 @@ app.listen(3000, () => {
 app.use("/api/user", userRouter);
 
 //singnup route
-app.use("/api/auth", singupRouter);
+app.use("/api/auth", authRouter);
 
 
 // create middleware to handle errors
@@ -43,11 +43,8 @@ app.use((err,req,res,next) => {
     // return res
 
     return res.status(statusCode).json({
-
         success: false, 
-
         statusCode,
-
         message
     })
 })
