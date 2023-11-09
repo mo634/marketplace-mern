@@ -24,13 +24,22 @@ const Singup = () => {
                 },
                 body: JSON.stringify(userInfo),
             });
-            const data = res.json();
-            data.then((res) => setError(res.message));
-            navigate("/sign-in")
+
+            const data = await res.json();
+            if (data.success) {
+                navigate("/sign-in")
+            }
+
+            else {
+                setError(data.message)
+            }
+
+
         } catch (error) {
-            console.log("error")
             setError(error.message);
-        } finally {
+        } 
+        
+        finally {
             setIsLoading(false);
         }
     };

@@ -2,7 +2,8 @@ import {User} from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
 import { errorHandler } from './../utils/error.js';
 import jwt from 'jsonwebtoken';
-export const singup = async (req, res,next) => {
+export const singup = async (req, res, next) => {
+    try {
     const {username, email, password} = req.body;
 
     // hashing pass
@@ -10,10 +11,11 @@ export const singup = async (req, res,next) => {
     const hashedPassword = bcryptjs.hashSync(password, 10);
     
     const newUser = new User({username, email, password: hashedPassword});
-    try {
+    
         await newUser.save();
-        res.status(201).json("user added successfuly");
-} catch (error) {
+        res.status(201).json({success:true});
+    } catch (error) {
+        console.log("error from catch block")
         // if err go to next middleWare 
         next(error)
     }
@@ -43,7 +45,7 @@ export const singnIn = async (req,res,next) => {
         //return data wihtout the password 
         const { password:pass , ...rest}= validUser._doc
         // send auth info to cookies 
-        res.cookie("access_token", token).status(200).json({ user: rest, message: 'Authentication successful' });
+        res.cookie("access_token", token).status(200).json({ user: rest, message: 'Authentication successful',success:true });
 
     } catch (error) {
         next(error)

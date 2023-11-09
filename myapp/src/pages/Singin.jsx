@@ -1,11 +1,13 @@
 import {useState} from "react";
-import {Link} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 
 const Singin = () => {
     //states
     const [userInfo, setUserInfo] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
+    const navigate = useNavigate()
     //func
     const handleChange = (e) => {
         setUserInfo({
@@ -17,15 +19,26 @@ const Singin = () => {
         e.preventDefault();
         setIsLoading(true);
         try {
-            const res = await fetch("/api/auth/signup", {
+            const res = await fetch("/api/auth/signin", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                },
+                }, 
                 body: JSON.stringify(userInfo),
             });
-            const data = res.json();
-            data.then((res) => setError(res.message));
+
+
+            const data = await res.json();
+
+            console.log(data.successs)
+            if (data.success) {
+                navigate("/home")
+            }
+
+            else {
+                setError(data.message)
+            }
+            
         } catch (error) {
             console.log("error");
             setError(error.message);
@@ -53,16 +66,16 @@ const Singin = () => {
                         <div></div>
                     </div>
                 ) : (
-                    <button className="main_btn">singn in </button>
+                    <button className="main_btn text-center">singn in </button>
                 )}
                 <button className="main_btn !bg-[#03a9f4]">continue with google</button>
             </form>
 
             <div className=" mt-3 flex gap-2">
-                <p className=" text-parg-color">have an account</p>
+                <p className=" text-parg-color">Dont have an account</p>
                 <Link to="/sign-up">sing up</Link>
             </div>
-            {error && <p>{error}</p>}
+            {error && <p className=" text-red-700">{error}</p>}
         </section>
     );
 };
