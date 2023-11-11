@@ -1,12 +1,13 @@
 import {useState} from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import { useSelector, useDispatch } from 'react-redux'
+import { isLoading, signinComplete, signinFail } from "../redux/user/userSlice"
 
 const Singin = () => {
     //states
     const [userInfo, setUserInfo] = useState({});
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState("");
+    const dispatch = useDispatch()
+    const {loading ,error} = useSelector((state) => state.user)
     const navigate = useNavigate()
     //func
     const handleChange = (e) => {
@@ -17,7 +18,7 @@ const Singin = () => {
     };
     const handlesSubmit = async (e) => {
         e.preventDefault();
-        setIsLoading(true);
+        dispatch(isLoading(true))
         try {
             const res = await fetch("/api/auth/signin", {
                 method: "POST",
@@ -32,18 +33,19 @@ const Singin = () => {
 
             console.log(data.successs)
             if (data.success) {
+                dispatch(signinComplete(data))
                 navigate("/home")
             }
 
             else {
-                setError(data.message)
+                dispatch(signinFail(data.message))
             }
             
         } catch (error) {
             console.log("error");
-            setError(error.message);
+            dispatch(signinFail(error.message))
         } finally {
-            setIsLoading(false);
+            dispatch(isLoading(false))
         }
     };
     return (
@@ -58,7 +60,7 @@ const Singin = () => {
                     className="input_field"
                     id="password"
                 />
-                {isLoading ? (
+                {loading ? (
                     <div className="lds-ellipsis">
                         <div></div>
                         <div></div>
