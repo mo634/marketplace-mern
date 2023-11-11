@@ -54,3 +54,50 @@ export const singnIn = async (req,res,next) => {
     console.log(email)
     console.log(password)
 }
+
+export const googleSingIn = async (req, res, next) => {
+    console.log(req.body)
+    try {
+        // check if user exist
+
+        const validUser = await User.findOne({ email: req.body.email })
+        
+        if (validUser) {
+            // authenticat user 
+        const token = jwt.sign({ id: validUser._id },process.env.JWT_SECRET)
+    
+        //return data wihtout the password 
+        const { password:pass , ...rest}= validUser._doc
+        // send auth info to cookies 
+        res.cookie("access_token", token).status(200).json({ user: rest, message: 'Authentication successful',success:true });
+
+        }
+        else {
+            // generate random defaul password to not get error in schema
+            let defaultPassword= Math.random().toString(36).slice(-8) + Math.random().toString().slice(-8)
+            
+            // hash password 
+            
+            const hashedPassword = bcryptjs.hashSync(defaultPassword, 10);
+            
+            const newUser = new User({
+                // moHamed mostafA  -> mohamedmostafa1234
+                username:req.body.username.split(" ").join("").toLowerCase() +Math.random().toString(36).slice(-4) 
+                , email:req.body.email
+                , password: hashedPassword
+            });
+            
+            await newUser.save();
+                // authenticat user
+                const token = jwt.sign({ id: newUser._id },process.env.JWT_SECRET)
+            
+                //return data wihtout the password 
+                const { password:pass , ...rest}= newUser._doc
+                // send auth info to cookies 
+                res.cookie("access_token", token).status(200).json({ user: rest, message: 'Authentication successful',success:true });
+                    
+                }
+    } catch (error) {
+        console.log(error)
+    }
+}

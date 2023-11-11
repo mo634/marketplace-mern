@@ -21,6 +21,11 @@ const userSchema = new Schema({
         required:[true,"password is required"],
     },
 
+    avatar: {
+        type: String,
+        default : "https://th.bing.com/th/id/R.bef8db8237a5d806ad51485439d1c84a?rik=FpgdXWfAKan7jg&pid=ImgRaw&r=0"
+    }
+
 } , {timestamps:true})
 
 // create and export model

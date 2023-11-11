@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
+import OAuth from "../components/OAuth";
 const Singup = () => {
     //states
     const [userInfo, setUserInfo] = useState({});
@@ -73,7 +74,7 @@ const Singup = () => {
                 ) : (
                     <button className="main_btn">singn up </button>
                 )}
-                <button className="main_btn !bg-[#03a9f4]">continue with google</button>
+                <OAuth/>
             </form>
 
             <div className=" mt-3 flex gap-2">

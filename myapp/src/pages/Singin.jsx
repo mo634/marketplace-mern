@@ -2,6 +2,7 @@ import {useState} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux'
 import { isLoading, signinComplete, signinFail } from "../redux/user/userSlice"
+import OAuth from "../components/OAuth";
 
 const Singin = () => {
     //states
@@ -70,7 +71,7 @@ const Singin = () => {
                 ) : (
                     <button className="main_btn text-center">singn in </button>
                 )}
-                <button className="main_btn !bg-[#03a9f4]">continue with google</button>
+                <OAuth/>
             </form>
 
             <div className=" mt-3 flex gap-2">
