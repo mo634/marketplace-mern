@@ -2,9 +2,11 @@ import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth';
 import {app} from '../firebase';
 import { useDispatch } from 'react-redux';
 import { signinComplete } from '../redux/user/userSlice';
+import { useNavigate } from 'react-router-dom';
 export default function OAuth() {
     //states 
     const dispatch = useDispatch()
+    const navigate=useNavigate()
     //func
     
     const handleGoogleProvider=async() => {
@@ -33,10 +35,11 @@ export default function OAuth() {
 
             const data = await res.json();
 
-            console.log(data)
-            console.log("hello")
-
             dispatch(signinComplete(data))
+
+            navigate("/")
+
+
 
             // identify 
         } catch (error) {
