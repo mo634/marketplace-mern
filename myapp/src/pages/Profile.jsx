@@ -4,23 +4,68 @@
 // request.resource.size < 2 * 1024 * 1024 &&
 // request.resource.contentType.matches('image/.*')
 import { useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage';
 import { app } from '../firebase';
-
+import {updateComplete,updateIsLoadingUpdate,UpdateFail} from '../redux/user/userSlice';
 const Profile = () => {
   
   //states 
   const [file, setFiles] = useState(null)
   const [filrePerc, setFilrePerc] = useState(null)
   const [fileUploadError, setFileUploadError] = useState(false)
+  const [updateSuccess, setUpdateSuccess] = useState(false)
   const [formData,setFormDate] = useState({})
   const { currentUser } = useSelector(state => state.user)
+  const { loading,error } = useSelector((state) => state.user)
   const fileRef = useRef(null)
-  //func
-  console.log(filrePerc)
-  console.log(formData)
+  const dispatch = useDispatch()
 
+  //func
+  const handleSubmit = async (e) => {
+  e.preventDefault()
+    try {
+    
+      dispatch(updateIsLoadingUpdate(true))
+
+
+    // send data to backend
+
+    const res = await fetch(`/api/user/update/${currentUser.user._id}`,
+      {
+        method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+    }
+    )
+
+    const data = await res.json() 
+
+    
+    if (data.success===false) {
+      dispatch(UpdateFail(data.message))
+      return
+    }
+      dispatch(updateComplete(data))
+      setUpdateSuccess(true)
+  } catch (error) {
+    dispatch(UpdateFail)
+    }
+    finally {
+      dispatch(updateIsLoadingUpdate(false))
+    }
+
+}
+  const handleChange = (e) => {
+    setFormDate(
+      {
+        ...formData,
+        [e.target.id]:e.target.value
+      }
+    )
+  }
   useEffect(() => {
     if (file) {
       handleFileUplaod(file)
@@ -61,15 +106,20 @@ const Profile = () => {
     
     );
   }
+
   return (
     <section className=' p-5 max-w-lg mx-auto'>
       <h1
       className=' text-center text-4xl font-semibold text_media'
       >Profile</h1>
-      <form className=' flex flex-col gap-3 '>
+      <form className=' flex flex-col gap-3 '
+      onSubmit={handleSubmit}
+      >
         <input
           onChange={(e)=>setFiles(e.target.files[0])}
-          type="file" ref={fileRef} hidden accept='image/*' />
+          type="file" ref={fileRef} hidden accept='image/*'
+        
+        />
         <img
         onClick={()=> fileRef.current.click()}
           src={formData.avatar || currentUser.user.avatar} alt="user image"
@@ -97,25 +147,44 @@ const Profile = () => {
           placeholder=' username'
           id='username'
           className='input_field'
+          defaultValue={currentUser.user.username}
+          onChange={handleChange}
         />
         <input type="text"
-          placeholder=' username'
-          id='username'
+          placeholder=' email'
+          defaultValue={currentUser.user.email}
+          onChange={handleChange}
+          id='email'
           className='input_field'
         />
-        <input type="text"
-          placeholder=' username'
-          id='username'
+        <input type="password"
+          placeholder=' password'
+          id='password'
           className='input_field'
+          onChange={handleChange}
         />
-        <button
-        className='main_btn'
-        >update</button>
+
+
+{loading ? (
+                      <div className="lds-ellipsis">
+                          <div></div>
+                          <div></div>
+                          <div></div>
+                          <div></div>
+                      </div>
+                  ) : (
+                    <button
+                    className='main_btn'
+                    >update</button>
+                  )}
+        
       </form>
       <div className='flex justify-between my-3'>
       <span>Delte account</span>
       <span>Sign out</span>
       </div>
+      <p className=' text-red-500'>{error?error:"" }</p>
+      <p className=' text-green-700'>{updateSuccess?"user updated successfully":"" }</p>
     </section>
   )
 }

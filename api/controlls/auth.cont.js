@@ -40,7 +40,8 @@ export const singnIn = async (req,res,next) => {
         }
 
         // authenticat user 
-        const token = jwt.sign({ id: validUser._id },process.env.JWT_SECRET)
+        const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET)
+
     
         //return data wihtout the password 
         const { password:pass , ...rest}= validUser._doc
@@ -50,9 +51,6 @@ export const singnIn = async (req,res,next) => {
     } catch (error) {
         next(error)
     }
-
-    console.log(email)
-    console.log(password)
 }
 
 export const googleSingIn = async (req, res, next) => {
@@ -71,6 +69,7 @@ export const googleSingIn = async (req, res, next) => {
         // send auth info to cookies 
         res.cookie("access_token", token).status(200).json({ user: rest, message: 'Authentication successful',success:true });
 
+            console.log("from google singin",token)
         }
         else {
             // generate random defaul password to not get error in schema

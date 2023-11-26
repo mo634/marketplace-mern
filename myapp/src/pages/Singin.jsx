@@ -31,8 +31,6 @@ const Singin = () => {
 
 
             const data = await res.json();
-
-            console.log(data.successs)
             if (data.success) {
                 dispatch(signinComplete(data))
                 navigate("/home")

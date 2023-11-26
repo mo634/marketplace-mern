@@ -7,6 +7,7 @@ export const verifyUser = (req,res,next) => {
 
     const token = req.cookies.access_token
 
+    console.log("from verify",token)
 
     if (!token) return next(errorHandler(401, "Unauthorized"))
     
@@ -15,9 +16,7 @@ export const verifyUser = (req,res,next) => {
         if (err) return next(errorHandler(403, "Forbiden"))
         
         // if no erro return data form cookie to body
-        console.log("from verify func",user)
         req.user = user 
-        console.log("req from verify func",req.user)
         
         next()
     })
