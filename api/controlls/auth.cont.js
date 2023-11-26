@@ -101,4 +101,14 @@ export const googleSingIn = async (req, res, next) => {
     }
 }
 
+export const singnOut = async (req,res,next) =>
+{
+    console.log("first")
+    try {
+        res.clearCookie("access_token")
+        res.status(200).json("user logged out")
+    } catch (error) {
+        next(error)
+    }
+    }
 

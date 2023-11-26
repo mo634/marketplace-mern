@@ -50,12 +50,26 @@ export const userSlice = createSlice({
           state.loading = false
           state.error= action.payload
       },
+    // signout orderes 
+    signoutIsLoading: (state,action) => {
+      state.loading=action.payload
+      },
+        signoutComplete: (state, action) => {
+            state.currentUser = null
+            state.loading = false
+            state.error=null
+        },
+      signoutFail: (state, action) => {
+          state.loading = false
+          state.error= action.payload
+      },
   },
 })
 
 
 export const { isLoading, signinComplete, signinFail, updateIsLoadingUpdate
 ,updateComplete,UpdateFail,deleteComplete,deleteIsLoading,deleteFail
+,signoutComplete,signoutIsLoading,signoutFail
 } = userSlice.actions
 
 export default userSlice.reducer

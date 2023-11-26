@@ -9,7 +9,8 @@ import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/st
 import { app } from '../firebase';
 import {
   updateComplete, updateIsLoadingUpdate, UpdateFail
-  ,deleteComplete,deleteIsLoading,deleteFail
+  , deleteComplete, deleteIsLoading, deleteFail
+  ,signoutComplete,signoutIsLoading,signoutFail
 } from '../redux/user/userSlice';
 const Profile = () => {
   
@@ -137,6 +138,29 @@ dispatch(deleteComplete(data));
 
   }
 
+  const handleSignOut=async () => {
+    try {
+      const res =await fetch(`/api/auth/signout`)
+    
+    const data = await res.json()
+    
+    if (data.success === false) {
+      dispatch(signoutFail(data.message))
+      return
+    }
+    
+    dispatch(signoutComplete(data));
+    
+    
+    } catch (error) {
+      dispatch(signoutFail(error.message))
+    }
+    
+    
+    
+    
+      }
+
   return (
     <section className=' p-5 max-w-lg mx-auto'>
       <h1
@@ -213,7 +237,9 @@ dispatch(deleteComplete(data));
         <span className=' cursor-pointer'
         onClick={hanldeDeleteAccount}
         >Delte account</span>
-      <span>Sign out</span>
+        <span className=' cursor-pointer'
+        onClick={handleSignOut}
+        >Sign out</span>
       </div>
       <p className=' text-red-500'>{error?error:"" }</p>
       <p className=' text-green-700'>{updateSuccess?"user updated successfully":"" }</p>
