@@ -7,7 +7,10 @@ import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage';
 import { app } from '../firebase';
-import {updateComplete,updateIsLoadingUpdate,UpdateFail} from '../redux/user/userSlice';
+import {
+  updateComplete, updateIsLoadingUpdate, UpdateFail
+  ,deleteComplete,deleteIsLoading,deleteFail
+} from '../redux/user/userSlice';
 const Profile = () => {
   
   //states 
@@ -107,6 +110,33 @@ const Profile = () => {
     );
   }
 
+  const hanldeDeleteAccount=async () => {
+try {
+  const res =await fetch(`/api/user/delete/${currentUser.user._id}`,
+  {
+  method:"DELETE"
+}
+)
+
+const data = await res.json()
+
+if (data.success === false) {
+  dispatch(deleteFail(data.message))
+  return
+}
+
+dispatch(deleteComplete(data));
+
+
+} catch (error) {
+  dispatch(deleteFail(error.message))
+}
+
+
+
+
+  }
+
   return (
     <section className=' p-5 max-w-lg mx-auto'>
       <h1
@@ -180,7 +210,9 @@ const Profile = () => {
         
       </form>
       <div className='flex justify-between my-3'>
-      <span>Delte account</span>
+        <span className=' cursor-pointer'
+        onClick={hanldeDeleteAccount}
+        >Delte account</span>
       <span>Sign out</span>
       </div>
       <p className=' text-red-500'>{error?error:"" }</p>
@@ -189,4 +221,4 @@ const Profile = () => {
   )
 }
 
-export default Profile
+export default Profile 
