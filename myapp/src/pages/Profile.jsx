@@ -3,6 +3,7 @@
 // allow write: if
 // request.resource.size < 2 * 1024 * 1024 &&
 // request.resource.contentType.matches('image/.*')
+import { Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage';
@@ -164,7 +165,7 @@ dispatch(deleteComplete(data));
   return (
     <section className=' p-5 max-w-lg mx-auto'>
       <h1
-      className=' text-center text-4xl font-semibold text_media'
+      className=' heading'
       >Profile</h1>
       <form className=' flex flex-col gap-3 '
       onSubmit={handleSubmit}
@@ -231,7 +232,7 @@ dispatch(deleteComplete(data));
                     className='main_btn'
                     >update</button>
                   )}
-        
+        <Link to={"/create-listing"} className='main_btn text-center !bg-green-700'>Create Listing</Link>
       </form>
       <div className='flex justify-between my-3'>
         <span className=' cursor-pointer'
