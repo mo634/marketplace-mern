@@ -4,22 +4,38 @@ import CheckBox from '../components/CheckBox'
 import NumberField from '../components/NumberField'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { app } from '../firebase'
+import { useSelector } from 'react-redux';
 
 
 const createListing = () => {
     //states
-
+    const { currentUser } = useSelector(state => state.user)
+    
     const [files, setFiles] = useState([])
     
     const [imagesUploadError, setImagesUploadError] = useState(false)
 
     const [uploading, setUploading] = useState(false)
 
+    const [loading, setLoading] = useState(false)
+
     const [formData, setFormData] = useState({
-        imagesUrls:[],
+        imagesUrls: [],
+        name: '',
+        description: '',
+        address: '',
+        type: 'rent',
+        bedrooms: 1,
+        bathrooms: 1,
+        regularPrice: 50,
+        discountPrice: 0,
+        offer: true,
+        parking: false,
+        furnished: false,
     })
 
-    
+    const [error,setError]=useState("")
+
 
     //func
     const handleUpload = () => {
@@ -98,6 +114,82 @@ const createListing = () => {
         })
     }
 
+    const handleChange=(e) => {
+        // handle checkbox "type (sale or rent)"
+        console.log("first")
+        if (e.target.id === "sale" || e.target.id=== "rent") {
+            setFormData({
+                ...formData,
+                type:e.target.id
+            })
+        }
+
+        //handle checkbox boolean
+
+        if (e.target.id === "parking" || e.target.id==="furnished"|| e.target.id==="offer")
+            {
+            setFormData({
+                ...formData,
+                [e.target.id]:e.target.checked
+                })
+        }
+        
+        //handle other fields
+
+        if (
+            e.target.type === 'number' ||
+            e.target.type === 'text' ||
+            e.target.type === 'textarea'
+        ) {
+        setFormData({
+            ...formData,
+            [e.target.id]: e.target.value,
+        });
+        }
+
+    }
+
+    const handleSubmit=async(e) => {
+        e.preventDefault()
+        setLoading(true)
+        try {
+
+            if(formData.imagesUrls.length<1)return setError("must at least 1 image upload")
+            
+            if (+formData.regularPrice < +formData.discountPrice)
+                return setError('Discount price must be lower than regular price')
+            
+            setError("")
+
+            const res = await fetch("/api/listing/create", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(
+                    {
+                        ...formData,
+                        userRef:currentUser.user._id
+                    }
+                )
+            })
+            
+            const data = await res.json()
+
+            if (!data.success) {
+                setError(data.message)
+            }
+            
+            
+        }
+        catch (error) {
+            setError(error.message)
+        }
+        finally {
+            setLoading(false)
+        }
+    }
+
 return (
     <main className="p-2  max-w-4xl mx-auto">
         {/* heading */}
@@ -109,24 +201,38 @@ return (
                 {/* form 1st col */}
             <form className=' flex flex-col flex-1 gap-3'>
                 {/* input fields */}
-                <input type="text" placeholder='Name' id='name' className='input_field' />
-                <textarea type="text" placeholder='Description' id="description" className='input_field' />
-                <input type="text" placeholder='Address' id='address' className='input_field' />
+                <input
+                    onChange={handleChange}
+                    value={formData.name}
+                    type="text" placeholder='Name' id='name' className='input_field' />
+                <textarea
+                    onChange={handleChange}
+                    value={formData.description}
+                    type="text" placeholder='Description' id="description" className='input_field' />
+                <input
+                    onChange={handleChange}
+                    value={formData.address}
+                    type="text" placeholder='Address' id='address' className='input_field' />
                 
                 {/* check box */}
                 <div className=' flex flex-wrap gap-4'>
-                                
-                <CheckBox data="sell"/>
-                <CheckBox data="rent"/>
-                <CheckBox data="parking spot"/>
-                <CheckBox data="furnished"/>
-                <CheckBox data="offer" />
-                    
+                
+                    <CheckBox data="sale" handleChange={handleChange} formData={ formData} />
+                    <CheckBox data="rent"   handleChange={handleChange} formData={ formData}  />
+                    <CheckBox data="parking"   handleChange={handleChange} formData={ formData}  />
+                    <CheckBox data="furnished"   handleChange={handleChange} formData={ formData}  />
+                    <CheckBox data="offer"    handleChange={handleChange} formData={ formData}  />
                 </div>
-                <NumberField data="beds"/>
-                <NumberField data="paths"/>
-                <NumberField data="regular price"/>
-                <NumberField data="discounted price"/>
+
+                {/* number fields inputs */}
+                <NumberField label="bedrooms" data="bedrooms"   formData={formData} handleChange={handleChange}/>
+                <NumberField label="bathrooms" data="bathrooms"  formData={formData}  handleChange={handleChange}/>
+                <NumberField label="regular price" data="regularPrice" formData={formData} handleChange={handleChange}/>
+                {
+                    formData.offer ?
+                    <NumberField label ="discounted price" data="discountPrice" formData={formData} handleChange={handleChange}/>
+                    : null
+                }
             </form>
             
             {/* 2nd col  */}
@@ -189,7 +295,18 @@ return (
                         </p>
                     }
                 </div>
-                    <button className='main_btn w-full !bg-main-color'>Create Listing</button>
+                <button
+                    
+                    onClick={handleSubmit}
+                    className='main_btn w-full !bg-main-color'>{
+                    loading?"creaeting....":"Create Listing"
+                    }
+                
+                </button>
+                
+                {
+                    error ? <p className=' text-red-500 font-bold'>{ error}</p>:null
+                }
             </div>
 
         </div>

@@ -42,7 +42,7 @@ body{
 }
 
 .main_btn{
-    @apply bg-[#333] p-3 rounded-md shadow-md text-white uppercase hover:opacity-[0.7] duration-500
+    @apply bg-[#333] p-3 rounded-md shadow-md text-white uppercase  duration-500
 }
 .heading{
   @apply text-center text-xl font-semibold md:text-4xl
