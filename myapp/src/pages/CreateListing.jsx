@@ -5,10 +5,13 @@ import NumberField from '../components/NumberField'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { app } from '../firebase'
 import { useSelector } from 'react-redux';
+import {useNavigate } from 'react-router-dom';
 
 
 const createListing = () => {
     //states
+    const navigate = useNavigate()
+    
     const { currentUser } = useSelector(state => state.user)
     
     const [files, setFiles] = useState([])
@@ -180,9 +183,9 @@ const createListing = () => {
                 setError(data.message)
             }
             
-            
+            navigate(`/listings/${data._id}`)
         }
-        catch (error) {
+        catch (error) { 
             setError(error.message)
         }
         finally {
