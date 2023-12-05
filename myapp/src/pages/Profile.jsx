@@ -20,7 +20,9 @@ const Profile = () => {
   const [filrePerc, setFilrePerc] = useState(null)
   const [fileUploadError, setFileUploadError] = useState(false)
   const [updateSuccess, setUpdateSuccess] = useState(false)
-  const [formData,setFormDate] = useState({})
+  const [formData, setFormDate] = useState({})
+  const [listingsError, setListingsError] = useState(false)
+  const [userListings,setUserListings]=useState([])
   const { currentUser } = useSelector(state => state.user)
   const { loading,error } = useSelector((state) => state.user)
   const fileRef = useRef(null)
@@ -160,7 +162,29 @@ dispatch(deleteComplete(data));
     
     
     
+  }
+  
+  const hanldeClick = async () => {
+    setListingsError(false)
+    try {
+      const res = await fetch(`/api/user/listings/${currentUser.user._id}`)
+
+      const data = await res.json()
+
+      if (data.success === false) {
+        setListingsError("Error happen while showing listings")
+        return
       }
+
+      setUserListings(data)
+
+
+    } catch (error) {
+      setListingsError(error.message)
+    }
+  }
+
+  console.log(userListings)
 
   return (
     <section className=' p-5 max-w-lg mx-auto'>
@@ -244,6 +268,46 @@ dispatch(deleteComplete(data));
       </div>
       <p className=' text-red-500'>{error?error:"" }</p>
       <p className=' text-green-700'>{updateSuccess?"user updated successfully":"" }</p>
+    
+      <button
+        onClick={hanldeClick}
+        className=' text-black font-semibold text-2xl text-center w-full'
+      >show listings</button>
+
+      {
+        userListings && 
+        userListings.length > 0 &&
+        userListings.map((listing,index) => (
+          <div key={listing._id}
+          
+          className='items-center border shadow-md my-3 flex justify-between p-2'
+          >
+            <Link to={`/listings/${currentUser.user._id}`}>
+              <img src={listing.imagesUrls[0]} alt="image not found"
+              className=' h-16 w-16 object-contain'
+              />
+            </Link>
+
+            <Link to={`/listings/${currentUser.user._id}`}>
+              <p
+              className='truncate'
+              >{listing.name}</p>
+            </Link>
+
+            <div
+            className='flex items-center flex-col gap-4'
+            >
+              <button
+              className='main_btn !bg-red-500 hover:opacity-90'
+              >Delte</button>
+              <Link to={`/update-listing/${listing._id}`}>
+              <button className='main_btn hover:opacity-90'>Edit</button>
+              </Link>
+            </div>
+
+          </div>
+        ))
+      }
     </section>
   )
 }
