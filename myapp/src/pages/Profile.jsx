@@ -184,7 +184,30 @@ dispatch(deleteComplete(data));
     }
   }
 
-  console.log(userListings)
+
+  const handleDelte=async(listingId) => {
+    try {
+      const res = await fetch(`/api/listing/delete/${listingId}`
+        , {
+        method:"DELETE"
+      }
+      )
+
+      const data = await res.json()
+
+      if (data.success === false) {
+        console.log(data.message)
+        return
+      }
+
+      setUserListings((prev) =>
+      prev.filter((element)=> element._id !== listingId)
+      )
+
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 
   return (
     <section className=' p-5 max-w-lg mx-auto'>
@@ -290,7 +313,7 @@ dispatch(deleteComplete(data));
 
             <Link to={`/listings/${currentUser.user._id}`}>
               <p
-              className='truncate'
+              className='truncate hover:underline text-2xl'
               >{listing.name}</p>
             </Link>
 
@@ -299,6 +322,8 @@ dispatch(deleteComplete(data));
             >
               <button
               className='main_btn !bg-red-500 hover:opacity-90'
+              
+              onClick={()=>handleDelte(listing._id)}
               >Delte</button>
               <Link to={`/update-listing/${listing._id}`}>
               <button className='main_btn hover:opacity-90'>Edit</button>
