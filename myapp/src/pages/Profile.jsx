@@ -313,7 +313,7 @@ dispatch(deleteComplete(data));
 
             <Link to={`/listings/${currentUser.user._id}`}>
               <p
-              className='truncate hover:underline text-2xl'
+              className='truncate hover:underline  text-lg md:text-2xl'
               >{listing.name}</p>
             </Link>
 
