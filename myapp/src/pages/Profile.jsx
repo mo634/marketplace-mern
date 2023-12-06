@@ -305,13 +305,13 @@ dispatch(deleteComplete(data));
           
           className='items-center border shadow-md my-3 flex justify-between p-2'
           >
-            <Link to={`/listings/${currentUser.user._id}`}>
+            <Link to={`/listings/${listing._id}`}>
               <img src={listing.imagesUrls[0]} alt="image not found"
               className=' h-16 w-16 object-contain'
               />
             </Link>
 
-            <Link to={`/listings/${currentUser.user._id}`}>
+            <Link to={`/listings/${listing._id}`}>
               <p
               className='truncate hover:underline  text-lg md:text-2xl'
               >{listing.name}</p>
