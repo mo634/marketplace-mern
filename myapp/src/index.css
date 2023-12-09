@@ -11,7 +11,7 @@ body{
     margin: 0;
     font-size: large;
 }
-*{
+p,h1{
     @apply text-main-color
 }
 
