@@ -9,6 +9,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import CreateListing from './pages/CreateListing';
 import UpdateListing from "./pages/UpdateListing";
 import ListingPage from "./pages/ListingPage";
+import Search from "./components/Search";
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/sign-in" element={ <Singin/>} />
         <Route path="/sign-up" element={ <Singup/>} />
         <Route path="/listings/:listId" element={ <ListingPage/>} />
+        <Route path="/search" element={ <Search/>} />
         
         {/* protected route for each time navigate to /profile he will go to PrivateRoute */}
         <Route element={<PrivateRoute/>}>

@@ -225,7 +225,8 @@ dispatch(deleteComplete(data));
         <img
         onClick={()=> fileRef.current.click()}
           src={formData.avatar || currentUser.user.avatar} alt="user image"
-        className=' hover:cursor-pointer hover:opacity-80 duration-500 h-24 w-24 rounded-full object-cover self-center my-3'
+          className=' 
+        hover:cursor-pointer hover:opacity-80 duration-500 h-24 w-24 rounded-full object-contain self-center my-3'
         />
 
         {/* uploaded progress  */}

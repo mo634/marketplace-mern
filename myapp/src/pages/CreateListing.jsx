@@ -179,11 +179,12 @@ const createListing = () => {
             
             const data = await res.json()
 
+
+
             if (!data.success) {
                 setError(data.message)
             }
-            
-            navigate(`/listings/${data._id}`)
+            navigate(`/listings/${data.data._id}`)
         }
         catch (error) { 
             setError(error.message)

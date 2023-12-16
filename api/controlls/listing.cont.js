@@ -73,7 +73,7 @@ try {
     
 }
 
-export const searchListings = async(req,res,next) => {
+export const searchListings = async (req, res, next) => {
     try {
         const limit = parseInt(req.query.limit) || 9
 
@@ -98,7 +98,8 @@ export const searchListings = async(req,res,next) => {
             parking={$in:[false,true]}
         }
 
-        let type = req.query.type 
+        let type = req.query.type
+        
 
         if (type === "all" || type === undefined) {
             type={$in:["rent","sale"]}
@@ -113,6 +114,7 @@ export const searchListings = async(req,res,next) => {
 
         const listing = await Listing.find({
             name: { $regex: searchTerm, $options: 'i' },
+            type,
             offer,
             furnished,
             parking,
