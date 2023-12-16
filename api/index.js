@@ -5,8 +5,9 @@ import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.route.js";
 import listingRouter from "./routes/listing.router.js";
 import cookieParser from 'cookie-parser';
+import path from 'path';
 dotenv.config();
-
+const __dirname = path.resolve();
 const app = express();
 
 app.use(express.json())
@@ -40,7 +41,12 @@ app.use("/api/auth", authRouter);
 app.use("/api/listing", listingRouter);
 
 
+app.use(express.static(path.join(__dirname, '/myapp/dist')));
 
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'myapp', 'dist', 'index.html'));
+  })
 // create middleware to handle errors
 app.use((err,req,res,next) => {
     //store status code err 
